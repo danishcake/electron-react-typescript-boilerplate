@@ -51,6 +51,11 @@ app.on('ready', () =>
 
   mainWindow.loadURL(`file://${__dirname}/app.html`);
 
+  // In dev mode it's important to show the window before we load - did-finish-load
+  // might not fire if the dev tools hit a breakpoint or something!
+  mainWindow.show();
+  mainWindow.focus();
+
   mainWindow.webContents.on('did-finish-load', () => {
     mainWindow.show();
     mainWindow.focus();

@@ -4,15 +4,34 @@
 
 const path = require('path');
 const webpack = require('webpack');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const merge = require('webpack-merge');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const baseConfig = require('./webpack.config.base');
 
+
 module.exports = merge(baseConfig, {
-  devtool: 'cheap-module-source-map',
+  devtool: false,
 
   mode: 'production',
+
+  module: {
+    rules: [
+      {
+        test:  /\.(sa|sc|c)ss$/,
+        use: [
+          {
+            loader: MiniCssExtractPlugin.loader,
+            options: {
+              hmr: false
+            }
+          },
+          'css-loader',
+          'sass-loader',
+        ]
+      }
+    ]
+  },
 
   entry: [
     './app/index'
@@ -21,84 +40,6 @@ module.exports = merge(baseConfig, {
   output: {
     path: path.join(__dirname, 'app/dist'),
     publicPath: '../dist/'
-  },
-
-  module: {
-    rules: [
-      // Extract all .global.css to style.css as is
-      {
-        test: /\.(scss|sass)$/,
-        use: ExtractTextPlugin.extract({
-          use: [{
-            loader: 'css-loader',
-            options: {
-              importLoaders: 1,
-              modules: {
-                localIdentName: '[name]__[local]__[hash:base64:5]',
-              }
-            }
-          },
-          {
-            loader: 'sass-loader'
-          }]
-        })
-      },
-
-      // WOFF Font
-      {
-        test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,
-        use: {
-          loader: 'url-loader',
-          options: {
-            limit: 10000,
-            mimetype: 'application/font-woff',
-          }
-        },
-      },
-      // WOFF2 Font
-      {
-        test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,
-        use: {
-          loader: 'url-loader',
-          options: {
-            limit: 10000,
-            mimetype: 'application/font-woff',
-          }
-        }
-      },
-      // TTF Font
-      {
-        test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
-        use: {
-          loader: 'url-loader',
-          options: {
-            limit: 10000,
-            mimetype: 'application/octet-stream'
-          }
-        }
-      },
-      // EOT Font
-      {
-        test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
-        use: 'file-loader',
-      },
-      // SVG Font
-      {
-        test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
-        use: {
-          loader: 'url-loader',
-          options: {
-            limit: 10000,
-            mimetype: 'image/svg+xml',
-          }
-        }
-      },
-      // Common Image Formats
-      {
-        test: /\.(?:ico|gif|png|jpg|jpeg|webp)$/,
-        use: 'url-loader',
-      }
-    ]
   },
 
   plugins: [
@@ -111,7 +52,11 @@ module.exports = merge(baseConfig, {
       'process.env.NODE_ENV': JSON.stringify('production')
     }),
 
-    new ExtractTextPlugin('style.css'),
+    new MiniCssExtractPlugin({
+      filename: '[name].[hash].css',
+      chunkFilename: '[id].[hash].css',
+      // ignoreOrder: false, // Enable to remove warnings about conflicting order
+    }),
 
     new HtmlWebpackPlugin({
       filename: '../app.html',

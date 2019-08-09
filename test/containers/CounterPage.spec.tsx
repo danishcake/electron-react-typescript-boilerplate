@@ -3,7 +3,7 @@ import '../utils/enzymeConfig';
 import * as React from 'react';
 import { mount } from 'enzyme';
 import { Provider } from 'react-redux';
-import { ConnectedRouter } from 'react-router-redux';
+import { ConnectedRouter } from 'connected-react-router';
 import CounterPage from '../../app/containers/CounterPage';
 import { IState } from '../../app/reducers';
 

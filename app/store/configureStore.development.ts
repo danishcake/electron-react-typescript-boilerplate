@@ -1,9 +1,9 @@
-import { createStore, applyMiddleware, compose } from 'redux';
+import { createStore as reduxCreateStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 import { createHashHistory } from 'history';
-import { routerMiddleware, push } from 'react-router-redux';
+import { routerMiddleware, push } from 'connected-react-router';
 import { createLogger } from 'redux-logger';
-import rootReducer from '../reducers';
+import createRootReducer from '../reducers';
 
 import * as counterActions from '../actions/counter';
 
@@ -27,8 +27,7 @@ const logger = (<any>createLogger)({
   collapsed: true
 });
 
-const history = createHashHistory();
-const router = routerMiddleware(history);
+export const history = createHashHistory();
 
 // If Redux DevTools Extension is installed use it, otherwise use Redux compose
 /* eslint-disable no-underscore-dangle */
@@ -38,22 +37,19 @@ const composeEnhancers: typeof compose = window.__REDUX_DEVTOOLS_EXTENSION_COMPO
     actionCreators
   }) as any :
   compose;
-/* eslint-enable no-underscore-dangle */
-const enhancer = composeEnhancers(
-  applyMiddleware(thunk, router, logger)
-);
 
-export = {
-  history,
-  configureStore(initialState: Object | undefined) {
-    const store = createStore(rootReducer, initialState, enhancer);
 
-    if (module.hot) {
-      module.hot.accept('../reducers', () =>
-        store.replaceReducer(require('../reducers')) // eslint-disable-line global-require
-      );
-    }
+export const createStore = (initialState?: object) => {
+  const store = reduxCreateStore(createRootReducer(history),
+    initialState,
+    composeEnhancers(applyMiddleware(thunk, routerMiddleware(history), logger))
+  );
 
-    return store;
+  if (module.hot) {
+    module.hot.accept('../reducers', () =>
+      store.replaceReducer(require('../reducers')) // eslint-disable-line global-require
+    );
   }
+
+  return store;
 };
