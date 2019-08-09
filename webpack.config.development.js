@@ -13,6 +13,8 @@ const port = process.env.PORT || 3000;
 module.exports = merge(baseConfig, {
   devtool: 'inline-source-map',
 
+  mode: 'development',
+
   entry: [
     'react-hot-loader/patch',
     `webpack-hot-middleware/client?path=http://localhost:${port}/__webpack_hmr&reload=true`,
@@ -24,14 +26,7 @@ module.exports = merge(baseConfig, {
   },
 
   module: {
-    // preLoaders: [
-    //   {
-    //     test: /\.js$/,
-    //     loader: 'eslint-loader',
-    //     exclude: /node_modules/
-    //   }
-    // ],
-    loaders: [
+    rules: [
       {
         test: /\.global\.css$/,
         loaders: [
@@ -44,7 +39,16 @@ module.exports = merge(baseConfig, {
         test: /^((?!\.global).)*\.css$/,
         loaders: [
           'style-loader',
-          'css-loader?modules&sourceMap&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]'
+          {
+            loader: 'css-loader',
+            options: {
+              sourceMap: true,
+              importLoaders: 1,
+              modules: {
+                localIdentName: '[name]__[local]__[hash:base64:5]',
+              }
+            }
+          }
         ]
       },
 
@@ -76,10 +80,11 @@ module.exports = merge(baseConfig, {
           {
             loader: 'css-loader',
             options: {
-              modules: true,
               sourceMap: true,
               importLoaders: 1,
-              localIdentName: '[name]__[local]__[hash:base64:5]',
+              modules: {
+                localIdentName: '[name]__[local]__[hash:base64:5]',
+              }
             }
           },
           {

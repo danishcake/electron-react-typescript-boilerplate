@@ -12,6 +12,8 @@ const baseConfig = require('./webpack.config.base');
 module.exports = merge(baseConfig, {
   devtool: 'cheap-module-source-map',
 
+  mode: 'production',
+
   entry: [
     './app/index'
   ],
@@ -22,7 +24,7 @@ module.exports = merge(baseConfig, {
   },
 
   module: {
-    loaders: [
+    rules: [
       // Extract all .global.css to style.css as is
       {
         test: /\.(scss|sass)$/,
@@ -30,9 +32,10 @@ module.exports = merge(baseConfig, {
           use: [{
             loader: 'css-loader',
             options: {
-              //modules: true,
               importLoaders: 1,
-              localIdentName: '[name]__[local]__[hash:base64:5]',
+              modules: {
+                localIdentName: '[name]__[local]__[hash:base64:5]',
+              }
             }
           },
           {
