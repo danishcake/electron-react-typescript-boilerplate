@@ -1,4 +1,6 @@
 import { Action } from 'redux';
+import { ThunkAction } from 'redux-thunk';
+import { IState } from '../reducers';
 
 export interface IAction extends Action {}
 export interface IActionWithPayload<T> extends IAction {
@@ -34,3 +36,5 @@ export const actionCreatorVoid = (type: string): IActionCreatorVoid =>
       return action.type === type;
     }
   });
+
+export type RootAction = IAction | ThunkAction<void, IState, void, IAction>;

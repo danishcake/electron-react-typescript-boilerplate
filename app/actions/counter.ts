@@ -1,10 +1,12 @@
-import { actionCreatorVoid } from './helpers';
+import { actionCreatorVoid, RootAction } from './helpers';
+import { Dispatch } from 'react';
+import { IState } from '../reducers';
 
 export const increment = actionCreatorVoid('INCREMENT_COUNTER');
 export const decrement = actionCreatorVoid('DECREMENT_COUNTER');
 
 export function incrementIfOdd() {
-  return (dispatch: Function, getState: Function) => {
+  return (dispatch: Dispatch<RootAction>, getState: () => IState) => {
     const { counter } = getState();
 
     if (counter % 2 === 0) {
@@ -16,7 +18,7 @@ export function incrementIfOdd() {
 }
 
 export function incrementAsync(delay: number = 1000) {
-  return (dispatch: Function) => {
+  return (dispatch: Dispatch<RootAction>, getState: () => IState) => {
     setTimeout(() => {
       dispatch(increment());
     }, delay);

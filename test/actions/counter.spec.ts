@@ -30,9 +30,10 @@ describe('actions', () => {
   // There's no nice way to test this at the moment...
   it('should incrementAsync', done => {
     const fn = actions.incrementAsync(1);
+    const getState = () => ({ counter: 2 });
     expect(fn).toBeInstanceOf(Function);
     const dispatch = spy();
-    fn(dispatch);
+    fn(dispatch, getState);
     setTimeout(() => {
       expect(dispatch.calledWith({ type: actions.increment.type })).toBe(true);
       done();
