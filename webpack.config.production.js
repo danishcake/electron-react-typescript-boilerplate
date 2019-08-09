@@ -18,16 +18,27 @@ module.exports = merge(baseConfig, {
   module: {
     rules: [
       {
-        test:  /\.(sa|sc|c)ss$/,
+        test: /\.global\.(sa|sc|c)ss$/,
         use: [
+          MiniCssExtractPlugin.loader,
+          'css-loader',
+          'sass-loader'
+        ]
+      },
+      {
+        test: /^((?!\.global).)*\.(sa|sc|c)ss$/,
+        use: [
+          MiniCssExtractPlugin.loader,
           {
-            loader: MiniCssExtractPlugin.loader,
+            loader: 'css-loader',
             options: {
-              hmr: false
+              modules: {
+                mode: 'local',
+                localIdentName: '[name]__[local]__[hash:base64:5]'
+              }
             }
           },
-          'css-loader',
-          'sass-loader',
+          'sass-loader'
         ]
       }
     ]
@@ -53,9 +64,7 @@ module.exports = merge(baseConfig, {
     }),
 
     new MiniCssExtractPlugin({
-      filename: '[name].[hash].css',
-      chunkFilename: '[id].[hash].css',
-      // ignoreOrder: false, // Enable to remove warnings about conflicting order
+      filename: 'style.css'
     }),
 
     new HtmlWebpackPlugin({

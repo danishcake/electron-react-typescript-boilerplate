@@ -19,7 +19,7 @@ module.exports = merge(baseConfig, {
   module: {
     rules: [
       {
-        test:  /\.global\.(sa|sc|c)ss$/,
+        test: /\.global\.(sa|sc|c)ss$/,
         use: [
           'style-loader',
           'css-loader',
@@ -27,7 +27,7 @@ module.exports = merge(baseConfig, {
         ]
       },
       {
-        test:  /^((?!\.global).)*\.(sa|sc|c)ss$/,
+        test: /^((?!\.global).)*\.(sa|sc|c)ss$/,
         use: [
           'style-loader',
           {
@@ -75,8 +75,7 @@ module.exports = merge(baseConfig, {
 
     new MiniCssExtractPlugin({
       filename: '[name].css',
-      chunkFilename: '[id].css',
-      // ignoreOrder: false, // Enable to remove warnings about conflicting order
+      chunkFilename: '[id].css'
     }),
 
     new webpack.LoaderOptionsPlugin({
