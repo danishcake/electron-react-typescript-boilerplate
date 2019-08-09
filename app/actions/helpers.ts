@@ -16,7 +16,7 @@ interface IActionCreatorVoid {
   readonly type: string;
   (): IAction;
 
-  test(action: IAction): action is IAction;
+  test(action: IAction): boolean;
 }
 
 export const actionCreator = <T>(type: string): IActionCreator<T> =>
@@ -30,7 +30,7 @@ export const actionCreator = <T>(type: string): IActionCreator<T> =>
 export const actionCreatorVoid = (type: string): IActionCreatorVoid =>
   Object.assign((): any => ({ type }), {
     type,
-    test(action: IAction): action is IAction {
+    test(action: IAction): boolean {
       return action.type === type;
     }
   });

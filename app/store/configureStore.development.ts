@@ -17,7 +17,7 @@ declare const module: NodeModule & {
   }
 };
 
-const actionCreators = Object.assign({}, 
+const actionCreators = Object.assign({},
   counterActions,
   {push}
 );
@@ -45,7 +45,7 @@ const enhancer = composeEnhancers(
 
 export = {
   history,
-  configureStore(initialState: Object | void) {
+  configureStore(initialState: Object | undefined) {
     const store = createStore(rootReducer, initialState, enhancer);
 
     if (module.hot) {
